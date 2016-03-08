@@ -108,6 +108,7 @@
     <Compile Include="SecurityUtil.cs" />
     <Compile Include="SessionLocalDataSourceProvider.cs" />
     <Compile Include="SqlLocalDataSourceProvider.cs" />
+    <Compile Include="StreamExtensions.cs" />
     <Compile Include="UriParameterAttribute.cs" />
     <Compile Include="UriParameters.cs" />
   </ItemGroup>
