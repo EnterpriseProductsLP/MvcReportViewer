@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System;
 using System.Data;
+using System.IO;
 
 namespace MvcReportViewer
 {
@@ -11,6 +12,8 @@ namespace MvcReportViewer
         {
             ReportParameters = new Dictionary<string, ReportParameter>();
         }
+
+        public Stream EmbeddedResourceStream { get; set; }
 
         public string ReportServerUrl { get; set; }
 

@@ -48,7 +48,6 @@ namespace MvcReportViewer.Example.Controllers
             return this.Report(
                 ReportFormat.Pdf,
                 LocalNoDataReportName,
-                false,
                 new { TodayDate = DateTime.Now },
                 ProcessingMode.Local);
         }
@@ -75,7 +74,6 @@ namespace MvcReportViewer.Example.Controllers
                 return this.Report(
                     format,
                     LocalReportName,
-                    false,
                     new { Parameter1 = "Test", Parameter2 = 123 },
                     ProcessingMode.Local,
                     new Dictionary<string, object>
@@ -89,7 +87,6 @@ namespace MvcReportViewer.Example.Controllers
             return this.Report(
                 format,
                 RemoteReportName,
-                false,
                 new { Parameter1 = "Hello World!", Parameter2 = DateTime.Now, Parameter3 = 12345, Parameter4 = (DateTime?)null },
                 filename: filename);
         }
@@ -99,7 +96,6 @@ namespace MvcReportViewer.Example.Controllers
             return this.Report(
                 format,
                 RemoteReportName,
-                false,
                 new List<KeyValuePair<string, object>>
                 {
                     new KeyValuePair<string, object>("Parameter1", "Value 1"),

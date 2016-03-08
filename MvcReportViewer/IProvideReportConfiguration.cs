@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Web.Mvc;
 
 using Microsoft.Reporting.WebForms;
@@ -13,6 +14,8 @@ namespace MvcReportViewer
         ControlSettings ControlSettings { get; set; }
 
         IEnumerable<KeyValuePair<string, object>> DataSources { get; set; }
+
+        Stream EmbeddedResourceStream { get; set; }
 
         string Filename { get; set; }
 

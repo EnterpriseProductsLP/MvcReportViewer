@@ -18,7 +18,6 @@ namespace MvcReportViewer
         /// <param name="controller">The Controller instance that this method extends.</param>
         /// <param name="reportFormat">Report Viewer Web Control supported format (Excel, Word, PDF or Image)</param>
         /// <param name="reportPath">The path to the report on the server.</param>
-        /// <param name="reportIsEmbeddedResource">Indicates whether or not the referenced report is an embedded resource.</param>
         /// <param name="mode">Report processing mode: remote or local.</param>
         /// <param name="localReportDataSources">Local report data sources</param>
         /// <param name="filename">Output filename</param>
@@ -27,12 +26,11 @@ namespace MvcReportViewer
             this Controller controller, 
             ReportFormat reportFormat, 
             string reportPath,
-            bool reportIsEmbeddedResource = false,
             ProcessingMode mode = ProcessingMode.Remote,
             IDictionary<string, object> localReportDataSources = null,
             string filename = null)
         {
-            var reportRunner = new ReportRunner(reportFormat, reportPath, reportIsEmbeddedResource, mode, localReportDataSources, filename);
+            var reportRunner = new ReportRunner(reportFormat, reportPath, mode, localReportDataSources, filename);
             return reportRunner.Run();
         }
 
@@ -42,7 +40,6 @@ namespace MvcReportViewer
         /// <param name="controller">The Controller instance that this method extends.</param>
         /// <param name="reportFormat">Report Viewer Web Control supported format (Excel, Word, PDF or Image)</param>
         /// <param name="reportPath">The path to the report on the server.</param>
-        /// <param name="reportIsEmbeddedResource">Indicates whether or not the referenced report is an embedded resource.</param>
         /// <param name="reportParameters">The report parameter properties for the report.</param>
         /// <param name="mode">Report processing mode: remote or local.</param>
         /// <param name="localReportDataSources">Local report data sources</param>
@@ -52,7 +49,6 @@ namespace MvcReportViewer
             this Controller controller,
             ReportFormat reportFormat,
             string reportPath,
-            bool reportIsEmbeddedResource,
             object reportParameters,
             ProcessingMode mode = ProcessingMode.Remote,
             IDictionary<string, object> localReportDataSources = null,
@@ -61,7 +57,6 @@ namespace MvcReportViewer
             var reportRunner = new ReportRunner(
                 reportFormat, 
                 reportPath,
-                reportIsEmbeddedResource,
                 HtmlHelper.AnonymousObjectToHtmlAttributes(reportParameters),
                 mode,
                 localReportDataSources,
@@ -76,7 +71,6 @@ namespace MvcReportViewer
         /// <param name="controller">The Controller instance that this method extends.</param>
         /// <param name="reportFormat">Report Viewer Web Control supported format (Excel, Word, PDF or Image)</param>
         /// <param name="reportPath">The path to the report on the server.</param>
-        /// <param name="reportIsEmbeddedResource">Indicates whether or not the referenced report is an embedded resource.</param>
         /// <param name="reportParameters">The report parameter properties for the report.</param>
         /// <param name="mode">Report processing mode: remote or local.</param>
         /// <param name="localReportDataSources">Local report data sources</param>
@@ -86,7 +80,6 @@ namespace MvcReportViewer
             this Controller controller,
             ReportFormat reportFormat,
             string reportPath,
-            bool reportIsEmbeddedResource,
             IEnumerable<KeyValuePair<string, object>> reportParameters,
             ProcessingMode mode = ProcessingMode.Remote,
             IDictionary<string, object> localReportDataSources = null,
@@ -95,7 +88,6 @@ namespace MvcReportViewer
             var reportRunner = new ReportRunner(
                 reportFormat,
                 reportPath,
-                reportIsEmbeddedResource,
                 reportParameters,
                 mode,
                 localReportDataSources,
@@ -110,7 +102,6 @@ namespace MvcReportViewer
         /// <param name="controller">The Controller instance that this method extends.</param>
         /// <param name="reportFormat">Report Viewer Web Control supported format (Excel, Word, PDF or Image)</param>
         /// <param name="reportPath">The path to the report on the server.</param>
-        /// <param name="reportIsEmbeddedResource">Indicates whether or not the referenced report is an embedded resource.</param>
         /// <param name="reportServerUrl">The URL for the report server.</param>
         /// <param name="username">The report server username.</param>
         /// <param name="password">The report server password.</param>
@@ -123,7 +114,6 @@ namespace MvcReportViewer
             this Controller controller,
             ReportFormat reportFormat,
             string reportPath,
-            bool reportIsEmbeddedResource,
             string reportServerUrl,
             string username = null,
             string password = null,
@@ -135,7 +125,6 @@ namespace MvcReportViewer
             var reportRunner = new ReportRunner(
                 reportFormat,
                 reportPath,
-                reportIsEmbeddedResource,
                 reportServerUrl,
                 username,
                 password,
@@ -153,7 +142,6 @@ namespace MvcReportViewer
         /// <param name="controller">The Controller instance that this method extends.</param>
         /// <param name="reportFormat">Report Viewer Web Control supported format (Excel, Word, PDF or Image)</param>
         /// <param name="reportPath">The path to the report on the server.</param>
-        /// <param name="reportIsEmbeddedResource">Indicates whether or not the referenced report is an embedded resource.</param>
         /// <param name="reportServerUrl">The URL for the report server.</param>
         /// <param name="reportParameters">The report parameter properties for the report.</param>
         /// <param name="username">The report server username.</param>
@@ -166,7 +154,6 @@ namespace MvcReportViewer
             this Controller controller,
             ReportFormat reportFormat,
             string reportPath,
-            bool reportIsEmbeddedResource,
             string reportServerUrl,
             IEnumerable<KeyValuePair<string, object>> reportParameters,
             string username = null,
@@ -178,7 +165,6 @@ namespace MvcReportViewer
             var reportRunner = new ReportRunner(
                 reportFormat,
                 reportPath,
-                reportIsEmbeddedResource,
                 reportServerUrl,
                 username,
                 password,

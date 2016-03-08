@@ -10,32 +10,19 @@ namespace MvcReportViewer.Tests
         {
             IProvideReportConfiguration configuration = new ReportConfigurationProvider
             {
+                EmbeddedResourceStream = TestData.EmbeddedResourceStream,
                 ReportFormat = ReportFormat.Excel,
                 ReportIsEmbeddedResource = true,
-                ReportPath = TestData.ReportEmbeddedResourceName
             };
 
             var reportRunner = new ReportRunner(configuration);
             var parameters = reportRunner.ViewerParameters;
             Assert.IsTrue(parameters.ReportIsEmbeddedResource);
-            Assert.AreEqual(TestData.ReportEmbeddedResourceName, parameters.ReportPath);
+            Assert.AreEqual(null, parameters.ReportPath);
             Assert.AreEqual(TestData.DefaultServer, parameters.ReportServerUrl);
             Assert.AreEqual(TestData.DefaultUsername, parameters.Username);
             Assert.AreEqual(TestData.DefaultPassword, parameters.Password);
-            Assert.AreEqual(ReportFormat.Excel, reportRunner.ReportFormat);
-            Assert.AreEqual(0, parameters.ReportParameters.Count);
-        }
-
-        [Test]
-        public void ReportNameAsEmbeddedResourceOnlyContructor()
-        {
-            var reportRunner = new ReportRunner(ReportFormat.Excel, TestData.ReportEmbeddedResourceName, true);
-            var parameters = reportRunner.ViewerParameters;
-            Assert.IsTrue(parameters.ReportIsEmbeddedResource);
-            Assert.AreEqual(TestData.ReportEmbeddedResourceName, parameters.ReportPath);
-            Assert.AreEqual(TestData.DefaultServer, parameters.ReportServerUrl);
-            Assert.AreEqual(TestData.DefaultUsername, parameters.Username);
-            Assert.AreEqual(TestData.DefaultPassword, parameters.Password);
+            Assert.AreEqual(TestData.EmbeddedResourceStream, parameters.EmbeddedResourceStream);
             Assert.AreEqual(ReportFormat.Excel, reportRunner.ReportFormat);
             Assert.AreEqual(0, parameters.ReportParameters.Count);
         }
@@ -106,7 +93,6 @@ namespace MvcReportViewer.Tests
             var reportRunner = new ReportRunner(
                 ReportFormat.Excel, 
                 TestData.ReportName,
-                false,
                 TestData.ActualParameters);
 
             var parameters = reportRunner.ViewerParameters;
@@ -158,7 +144,6 @@ namespace MvcReportViewer.Tests
             var reportRunner = new ReportRunner(
                 ReportFormat.Excel,
                 TestData.ReportName,
-                false,
                 TestData.Server,
                 TestData.Username,
                 TestData.Password,

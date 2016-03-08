@@ -44,7 +44,7 @@ namespace MvcReportViewer
 
             if (parameters.ReportIsEmbeddedResource)
             {
-                localReport.LoadReportDefinition	();
+                localReport.LoadReportDefinition(parameters.EmbeddedResourceStream);
                 localReport.ReportEmbeddedResource = parameters.ReportPath;
             }
             else
@@ -72,8 +72,7 @@ namespace MvcReportViewer
 
             if (parameters.ReportParameters.Count > 0)
             {
-                var nonNullValues = parameters.ReportParameters.Values.ToDictionary(parameter => parameter.Name, parameter => parameter.Values);
-                localReport.SetParameters(parameters.ReportParameters.Values.First());
+                localReport.SetParameters(parameters.ReportParameters.Values);
             }
 
             if (handlers != null)
