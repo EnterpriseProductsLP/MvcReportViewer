@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using Microsoft.Reporting.WebForms;
 using System.Web.UI.WebControls;
 
@@ -40,7 +41,16 @@ namespace MvcReportViewer
         {
             reportViewer.ProcessingMode = ProcessingMode.Local;
             var localReport = reportViewer.LocalReport;
-            localReport.ReportPath = parameters.ReportPath;
+
+            if (parameters.ReportIsEmbeddedResource)
+            {
+                localReport.LoadReportDefinition	();
+                localReport.ReportEmbeddedResource = parameters.ReportPath;
+            }
+            else
+            {
+                localReport.ReportPath = parameters.ReportPath;
+            }
 
             if (parameters.ControlSettings?.UseCurrentAppDomainPermissionSet != null &&
                 parameters.ControlSettings.UseCurrentAppDomainPermissionSet.Value)
@@ -62,7 +72,8 @@ namespace MvcReportViewer
 
             if (parameters.ReportParameters.Count > 0)
             {
-                localReport.SetParameters(parameters.ReportParameters.Values);
+                var nonNullValues = parameters.ReportParameters.Values.ToDictionary(parameter => parameter.Name, parameter => parameter.Values);
+                localReport.SetParameters(parameters.ReportParameters.Values.First());
             }
 
             if (handlers != null)

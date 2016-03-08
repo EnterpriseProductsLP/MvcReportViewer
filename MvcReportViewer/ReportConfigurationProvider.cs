@@ -26,6 +26,8 @@ namespace MvcReportViewer
 
         public ReportFormat ReportFormat { get; set; }
 
+        public bool ReportIsEmbeddedResource { get; set; }
+
         public object ReportParameters { get; set; }
 
         public string ReportPath { get; set; }

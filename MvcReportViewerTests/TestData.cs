@@ -15,6 +15,8 @@ namespace MvcReportViewer.Tests
 
         public static readonly string DataSourcePassword = "password1";
 
+        public static readonly string ReportEmbeddedResourceName = "MvcReportViewer.Tests.TestReports.TestReport.rdl";
+
         public static readonly string ReportName = "TestReport";
 
         public static readonly string DefaultServer = "http://localhost/ReportServer_SQLEXPRESS";

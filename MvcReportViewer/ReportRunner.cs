@@ -24,6 +24,7 @@ namespace MvcReportViewer
             var filename = configuration.Filename;
             var processingMode = configuration.ProcessingMode;
             var localReportDataSources = configuration.DataSources?.ToDictionary(pair => pair.Key, pair => pair.Value);
+            var reportIsEmbeddedResource = configuration.ReportIsEmbeddedResource;
             var reportPath = configuration.ReportPath;
             var reportServerUrl = configuration.ReportServerUrl;
             var username = configuration.Username;
@@ -32,22 +33,23 @@ namespace MvcReportViewer
 
             _viewerParameters = new ReportViewerParameters
             {
-                ReportServerUrl = _config.ReportServerUrl,
-                Username = _config.Username,
+                IsReportRunnerExecution = true,
                 Password = _config.Password,
-                IsReportRunnerExecution = true
+                ProcessingMode = processingMode,
+                ReportIsEmbeddedResource = reportIsEmbeddedResource,
+                ReportPath = reportPath,
+                ReportServerUrl = _config.ReportServerUrl,
+                Username = _config.Username
             };
 
             ReportFormat = reportFormat;
             _filename = filename;
 
-            _viewerParameters.ProcessingMode = processingMode;
             if (processingMode == ProcessingMode.Local && localReportDataSources != null)
             {
                 _viewerParameters.LocalReportDataSources = localReportDataSources;
             }
 
-            _viewerParameters.ReportPath = reportPath;
             _viewerParameters.ReportServerUrl = reportServerUrl ?? _viewerParameters.ReportServerUrl;
             if (username != null || password != null)
             {
@@ -61,23 +63,26 @@ namespace MvcReportViewer
         public ReportRunner(
             ReportFormat reportFormat,
             string reportPath,
+            bool reportIsEmbeddedResource = false,
             ProcessingMode mode = ProcessingMode.Remote,
             IDictionary<string, object> localReportDataSources = null,
             string filename = null)
-            : this(reportFormat, reportPath, null, null, null, null, mode, localReportDataSources, filename)
+            : this(reportFormat, reportPath, reportIsEmbeddedResource, null, null, null, null, mode, localReportDataSources, filename)
         {
         }
 
         public ReportRunner(
             ReportFormat reportFormat,
             string reportPath,
+            bool reportIsEmbeddedResource,
             IDictionary<string, object> reportParameters,
             ProcessingMode mode = ProcessingMode.Remote,
             IDictionary<string, object> localReportDataSources = null,
             string filename = null)
             : this(
                 reportFormat, 
-                reportPath, 
+                reportPath,
+                reportIsEmbeddedResource,
                 reportParameters?.ToList(),
                 mode,
                 localReportDataSources,
@@ -88,17 +93,19 @@ namespace MvcReportViewer
         public ReportRunner(
             ReportFormat reportFormat,
             string reportPath,
+            bool reportIsEmbeddedResource,
             IEnumerable<KeyValuePair<string, object>> reportParameters,
             ProcessingMode mode = ProcessingMode.Remote,
             IDictionary<string, object> localReportDataSources = null,
             string filename = null)
-            : this(reportFormat, reportPath, null, null, null, reportParameters, mode, localReportDataSources, filename)
+            : this(reportFormat, reportPath, reportIsEmbeddedResource, null, null, null, reportParameters, mode, localReportDataSources, filename)
         {
         }
 
         public ReportRunner(
             ReportFormat reportFormat,
             string reportPath,
+            bool reportIsEmbeddedResource,
             string reportServerUrl,
             string username,
             string password,
@@ -108,7 +115,8 @@ namespace MvcReportViewer
             string filename = null)
             : this(
                 reportFormat, 
-                reportPath, 
+                reportPath,
+                reportIsEmbeddedResource,
                 reportServerUrl, 
                 username, 
                 password, 
@@ -122,6 +130,7 @@ namespace MvcReportViewer
         public ReportRunner(
             ReportFormat reportFormat,
             string reportPath,
+            bool reportIsEmbeddedResource,
             string reportServerUrl,
             string username,
             string password,
@@ -132,22 +141,23 @@ namespace MvcReportViewer
         {
             _viewerParameters = new ReportViewerParameters
             {
-                ReportServerUrl = _config.ReportServerUrl,
-                Username = _config.Username,
+                IsReportRunnerExecution = true,
                 Password = _config.Password,
-                IsReportRunnerExecution = true
+                ProcessingMode = mode,
+                ReportIsEmbeddedResource = reportIsEmbeddedResource,
+                ReportPath = reportPath,
+                ReportServerUrl = _config.ReportServerUrl,
+                Username = _config.Username
             };
 
             ReportFormat = reportFormat;
             _filename = filename;
 
-            _viewerParameters.ProcessingMode = mode;
             if (mode == ProcessingMode.Local && localReportDataSources != null)
             {
                 _viewerParameters.LocalReportDataSources = localReportDataSources;
             }
 
-            _viewerParameters.ReportPath = reportPath;
             _viewerParameters.ReportServerUrl = reportServerUrl ?? _viewerParameters.ReportServerUrl;
             if (username != null || password != null)
             {

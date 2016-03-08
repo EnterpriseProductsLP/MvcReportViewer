@@ -6,6 +6,41 @@ namespace MvcReportViewer.Tests
     public class ReportRunnerTests
     {
         [Test]
+        public void ReportNameAsEmbeddedResourceOnlyFromConfiguration()
+        {
+            IProvideReportConfiguration configuration = new ReportConfigurationProvider
+            {
+                ReportFormat = ReportFormat.Excel,
+                ReportIsEmbeddedResource = true,
+                ReportPath = TestData.ReportEmbeddedResourceName
+            };
+
+            var reportRunner = new ReportRunner(configuration);
+            var parameters = reportRunner.ViewerParameters;
+            Assert.IsTrue(parameters.ReportIsEmbeddedResource);
+            Assert.AreEqual(TestData.ReportEmbeddedResourceName, parameters.ReportPath);
+            Assert.AreEqual(TestData.DefaultServer, parameters.ReportServerUrl);
+            Assert.AreEqual(TestData.DefaultUsername, parameters.Username);
+            Assert.AreEqual(TestData.DefaultPassword, parameters.Password);
+            Assert.AreEqual(ReportFormat.Excel, reportRunner.ReportFormat);
+            Assert.AreEqual(0, parameters.ReportParameters.Count);
+        }
+
+        [Test]
+        public void ReportNameAsEmbeddedResourceOnlyContructor()
+        {
+            var reportRunner = new ReportRunner(ReportFormat.Excel, TestData.ReportEmbeddedResourceName, true);
+            var parameters = reportRunner.ViewerParameters;
+            Assert.IsTrue(parameters.ReportIsEmbeddedResource);
+            Assert.AreEqual(TestData.ReportEmbeddedResourceName, parameters.ReportPath);
+            Assert.AreEqual(TestData.DefaultServer, parameters.ReportServerUrl);
+            Assert.AreEqual(TestData.DefaultUsername, parameters.Username);
+            Assert.AreEqual(TestData.DefaultPassword, parameters.Password);
+            Assert.AreEqual(ReportFormat.Excel, reportRunner.ReportFormat);
+            Assert.AreEqual(0, parameters.ReportParameters.Count);
+        }
+
+        [Test]
         public void ReportNameOnlyFromConfiguration()
         {
             IProvideReportConfiguration configuration = new ReportConfigurationProvider
@@ -16,6 +51,7 @@ namespace MvcReportViewer.Tests
 
             var reportRunner = new ReportRunner(configuration);
             var parameters = reportRunner.ViewerParameters;
+            Assert.IsFalse(parameters.ReportIsEmbeddedResource);
             Assert.AreEqual(TestData.ReportName, parameters.ReportPath);
             Assert.AreEqual(TestData.DefaultServer, parameters.ReportServerUrl);
             Assert.AreEqual(TestData.DefaultUsername, parameters.Username);
@@ -29,6 +65,7 @@ namespace MvcReportViewer.Tests
         {
             var reportRunner = new ReportRunner(ReportFormat.Excel, TestData.ReportName);
             var parameters = reportRunner.ViewerParameters;
+            Assert.IsFalse(parameters.ReportIsEmbeddedResource);
             Assert.AreEqual(TestData.ReportName, parameters.ReportPath);
             Assert.AreEqual(TestData.DefaultServer, parameters.ReportServerUrl);
             Assert.AreEqual(TestData.DefaultUsername, parameters.Username);
@@ -50,6 +87,7 @@ namespace MvcReportViewer.Tests
             var reportRunner = new ReportRunner(configuration);
 
             var parameters = reportRunner.ViewerParameters;
+            Assert.IsFalse(parameters.ReportIsEmbeddedResource);
             Assert.AreEqual(TestData.ReportName, parameters.ReportPath);
             Assert.AreEqual(TestData.DefaultServer, parameters.ReportServerUrl);
             Assert.AreEqual(TestData.DefaultUsername, parameters.Username);
@@ -68,9 +106,11 @@ namespace MvcReportViewer.Tests
             var reportRunner = new ReportRunner(
                 ReportFormat.Excel, 
                 TestData.ReportName,
+                false,
                 TestData.ActualParameters);
 
             var parameters = reportRunner.ViewerParameters;
+            Assert.IsFalse(parameters.ReportIsEmbeddedResource);
             Assert.AreEqual(TestData.ReportName, parameters.ReportPath);
             Assert.AreEqual(TestData.DefaultServer, parameters.ReportServerUrl);
             Assert.AreEqual(TestData.DefaultUsername, parameters.Username);
@@ -99,6 +139,7 @@ namespace MvcReportViewer.Tests
             var reportRunner = new ReportRunner(configuration);
 
             var parameters = reportRunner.ViewerParameters;
+            Assert.IsFalse(parameters.ReportIsEmbeddedResource);
             Assert.AreEqual(TestData.ReportName, parameters.ReportPath);
             Assert.AreEqual(TestData.Server, parameters.ReportServerUrl);
             Assert.AreEqual(TestData.Username, parameters.Username);
@@ -117,12 +158,14 @@ namespace MvcReportViewer.Tests
             var reportRunner = new ReportRunner(
                 ReportFormat.Excel,
                 TestData.ReportName,
+                false,
                 TestData.Server,
                 TestData.Username,
                 TestData.Password,
                 TestData.ActualParameters);
 
             var parameters = reportRunner.ViewerParameters;
+            Assert.IsFalse(parameters.ReportIsEmbeddedResource);
             Assert.AreEqual(TestData.ReportName, parameters.ReportPath);
             Assert.AreEqual(TestData.Server, parameters.ReportServerUrl);
             Assert.AreEqual(TestData.Username, parameters.Username);

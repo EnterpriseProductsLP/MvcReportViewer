@@ -37,5 +37,7 @@ namespace MvcReportViewer
         public ControlSettings ControlSettings { get; set; }
 
         public string EventsHandlerType { get; set; }
+
+        public bool ReportIsEmbeddedResource { get; set; }
     }
 }
