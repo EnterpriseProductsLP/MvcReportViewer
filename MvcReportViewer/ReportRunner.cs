@@ -288,7 +288,7 @@ namespace MvcReportViewer
 
         private void Validate()
         {
-            if (string.IsNullOrEmpty(_viewerParameters.ReportServerUrl))
+            if (_viewerParameters.ProcessingMode == ProcessingMode.Remote && string.IsNullOrEmpty(_viewerParameters.ReportServerUrl))
             {
                 throw new MvcReportViewerException("Report Server is not specified.");
             }
