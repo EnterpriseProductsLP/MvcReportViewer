@@ -176,6 +176,7 @@
     <Compile Include="..\MvcReportViewer\UriParameters.cs">
       <Link>UriParameters.cs</Link>
     </Compile>
+    <Compile Include="StreamExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="..\MvcReportViewer\MvcReportViewer.aspx">
