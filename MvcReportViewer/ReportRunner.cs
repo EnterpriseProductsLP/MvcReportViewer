@@ -168,7 +168,7 @@ namespace MvcReportViewer
         // The property is only used for unit-testing
         internal ReportFormat ReportFormat { get; }
 
-        public FileStreamResult Run()
+        public byte[] Render(out string mimeType)
         {
             Validate();
 
@@ -176,7 +176,6 @@ namespace MvcReportViewer
             reportViewer.Initialize(_viewerParameters);
             ValidateReportFormat(reportViewer);
 
-            string mimeType;
             Stream output;
 
             if (_viewerParameters.ProcessingMode == ProcessingMode.Remote)
@@ -190,13 +189,15 @@ namespace MvcReportViewer
                     null,
                     out mimeType,
                     out extension);
+
+                return output.ToByteArray();
             }
             else
             {
                 var localReport = reportViewer.LocalReport;
                 if (_viewerParameters.LocalReportDataSources != null)
                 {
-                    foreach(var dataSource in _viewerParameters.LocalReportDataSources)
+                    foreach (var dataSource in _viewerParameters.LocalReportDataSources)
                     {
                         var reportDataSource = new ReportDataSource(dataSource.Key, dataSource.Value);
                         localReport.DataSources.Add(reportDataSource);
@@ -210,17 +211,21 @@ namespace MvcReportViewer
 
                 var format = ReportFormat2String(ReportFormat);
 
-                var report = localReport.Render(
-                    format, 
+                return localReport.Render(
+                    format,
                     null,
                     out mimeType,
                     out encoding,
                     out extension,
                     out streamids,
                     out warnings);
-
-                output = new MemoryStream(report);
             }
+        }
+
+        public FileStreamResult Run()
+        {
+            string mimeType;
+            var reportDocument = Render(out mimeType);
 
             if (!string.IsNullOrEmpty(_filename))
             {
@@ -229,7 +234,9 @@ namespace MvcReportViewer
                 response.AddHeader("Content-Disposition", $"attachment; filename={_filename}");
             }
 
-            return new FileStreamResult(output, mimeType);
+            var reportDocumentStream = reportDocument.ToMemoryStream();
+
+            return new FileStreamResult(reportDocumentStream, mimeType);
         }
 
         private void ParseParameters(IEnumerable<KeyValuePair<string, object>> reportParameters)
