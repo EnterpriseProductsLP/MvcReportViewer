@@ -82,6 +82,7 @@ if (formElement{0}) {{
             var method = configuration.FormMethod;
             var htmlAttributes = ParameterHelpers.GetReportParameters(configuration.HtmlAttributes).ToDictionary(pair => pair.Key, pair => pair.Value);
             var password = configuration.Password;
+            var processingMode = configuration.ProcessingMode;
             var reportParameters = ParameterHelpers.GetReportParameters(configuration.ReportParameters);
             var reportPath = configuration.ReportPath;
             var reportServerUrl = configuration.ReportServerUrl;
@@ -102,6 +103,7 @@ if (formElement{0}) {{
             _htmlAttributes = htmlAttributes;
             _method = method;
             _password = password;
+            _processingMode = processingMode;
             _reportParameters = reportParameters?.ToList();
             _reportPath = reportPath;
             _reportServerUrl = reportServerUrl;
