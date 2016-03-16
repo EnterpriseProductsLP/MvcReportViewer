@@ -3,7 +3,6 @@ using Microsoft.Reporting.WebForms;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
-using System.IO;
 using System.Web;
 using MvcReportViewer.Configuration;
 using System.Collections;
@@ -18,19 +17,23 @@ namespace MvcReportViewer
 
         private readonly string _filename;
 
+        private readonly string _deviceInfo;
+
         public ReportRunner(IProvideReportConfiguration configuration)
         {
-            var reportFormat = configuration.ReportFormat;
-            var filename = configuration.Filename;
-            var processingMode = configuration.ProcessingMode;
-            var localReportDataSources = configuration.DataSources?.ToDictionary(pair => pair.Key, pair => pair.Value);
-            var reportIsEmbeddedResource = configuration.ReportIsEmbeddedResource;
+            var deviceInfo = configuration.DeviceInfo;
             var embeddedResourceStream = configuration.EmbeddedResourceStream;
+            var eventsHandlerType = configuration.EventsHandlerType?.AssemblyQualifiedName;
+            var filename = configuration.Filename;
+            var localReportDataSources = configuration.DataSources?.ToDictionary(pair => pair.Key, pair => pair.Value);
+            var password = configuration.Password;
+            var processingMode = configuration.ProcessingMode;
+            var reportFormat = configuration.ReportFormat;
+            var reportIsEmbeddedResource = configuration.ReportIsEmbeddedResource;
+            var reportParameters = ParameterHelpers.GetReportParameters(configuration.ReportParameters);
             var reportPath = configuration.ReportPath;
             var reportServerUrl = configuration.ReportServerUrl;
             var username = configuration.Username;
-            var password = configuration.Password;
-            var reportParameters = ParameterHelpers.GetReportParameters(configuration.ReportParameters);
 
             _viewerParameters = new ReportViewerParameters
             {
@@ -45,11 +48,20 @@ namespace MvcReportViewer
             };
 
             ReportFormat = reportFormat;
+            _deviceInfo = deviceInfo;
             _filename = filename;
 
-            if (processingMode == ProcessingMode.Local && localReportDataSources != null)
+            if (processingMode == ProcessingMode.Local)
             {
-                _viewerParameters.LocalReportDataSources = localReportDataSources;
+                if (localReportDataSources != null)
+                {
+                    _viewerParameters.LocalReportDataSources = localReportDataSources;
+                }
+
+                if (eventsHandlerType != null)
+                {
+                    _viewerParameters.EventsHandlerType = eventsHandlerType;
+                }
             }
 
             _viewerParameters.ReportServerUrl = reportServerUrl ?? _viewerParameters.ReportServerUrl;
@@ -65,10 +77,11 @@ namespace MvcReportViewer
         public ReportRunner(
             ReportFormat reportFormat,
             string reportPath,
+            string deviceInfo = DefaultParameterValues.DeviceInfo,
             ProcessingMode mode = ProcessingMode.Remote,
             IDictionary<string, object> localReportDataSources = null,
             string filename = null)
-            : this(reportFormat, reportPath, null, null, null, null, mode, localReportDataSources, filename)
+            : this(reportFormat, reportPath, null, null, null, null, deviceInfo, mode, localReportDataSources, filename)
         {
         }
 
@@ -76,13 +89,15 @@ namespace MvcReportViewer
             ReportFormat reportFormat,
             string reportPath,
             IDictionary<string, object> reportParameters,
+            string deviceInfo = DefaultParameterValues.DeviceInfo,
             ProcessingMode mode = ProcessingMode.Remote,
             IDictionary<string, object> localReportDataSources = null,
             string filename = null)
             : this(
-                reportFormat, 
+                reportFormat,
                 reportPath,
                 reportParameters?.ToList(),
+                deviceInfo,
                 mode,
                 localReportDataSources,
                 filename)
@@ -93,10 +108,11 @@ namespace MvcReportViewer
             ReportFormat reportFormat,
             string reportPath,
             IEnumerable<KeyValuePair<string, object>> reportParameters,
+            string deviceInfo = DefaultParameterValues.DeviceInfo,
             ProcessingMode mode = ProcessingMode.Remote,
             IDictionary<string, object> localReportDataSources = null,
             string filename = null)
-            : this(reportFormat, reportPath, null, null, null, reportParameters, mode, localReportDataSources, filename)
+            : this(reportFormat, reportPath, null, null, null, reportParameters, deviceInfo, mode, localReportDataSources, filename)
         {
         }
 
@@ -107,16 +123,18 @@ namespace MvcReportViewer
             string username,
             string password,
             IDictionary<string, object> reportParameters,
+            string deviceInfo = DefaultParameterValues.DeviceInfo,
             ProcessingMode mode = ProcessingMode.Remote,
             IDictionary<string, object> localReportDataSources = null,
             string filename = null)
             : this(
-                reportFormat, 
+                reportFormat,
                 reportPath,
-                reportServerUrl, 
-                username, 
-                password, 
+                reportServerUrl,
+                username,
+                password,
                 reportParameters?.ToList(),
+                deviceInfo,
                 mode,
                 localReportDataSources,
                 filename)
@@ -130,6 +148,7 @@ namespace MvcReportViewer
             string username,
             string password,
             IEnumerable<KeyValuePair<string, object>> reportParameters,
+            string deviceInfo = DefaultParameterValues.DeviceInfo,
             ProcessingMode mode = ProcessingMode.Remote,
             IDictionary<string, object> localReportDataSources = null,
             string filename = null)
@@ -145,6 +164,7 @@ namespace MvcReportViewer
             };
 
             ReportFormat = reportFormat;
+            _deviceInfo = deviceInfo;
             _filename = filename;
 
             if (mode == ProcessingMode.Local && localReportDataSources != null)
@@ -170,27 +190,50 @@ namespace MvcReportViewer
 
         public byte[] Render(out string mimeType)
         {
+            string encoding;
+            return Render(out mimeType, out encoding);
+        }
+
+        public byte[] Render(out string mimeType, out string encoding)
+        {
+            string fileNameExtension;
+            return Render(out mimeType, out encoding, out fileNameExtension);
+        }
+
+        public byte[] Render(out string mimeType, out string encoding, out string fileNameExtension)
+        {
+            string[] streams;
+            return Render(out mimeType, out encoding, out fileNameExtension, out streams);
+        }
+
+        public byte[] Render(out string mimeType, out string encoding, out string fileNameExtension, out string[] streams)
+        {
+            Warning[] warnings;
+            return Render(out mimeType, out encoding, out fileNameExtension, out streams, out warnings);
+        }
+
+        public byte[] Render(out string mimeType, out string encoding, out string fileNameExtension, out string[] streams, out Warning[] warnings)
+        {
             Validate();
 
             var reportViewer = new ReportViewer();
             reportViewer.Initialize(_viewerParameters);
             ValidateReportFormat(reportViewer);
 
-            Stream output;
-
             if (_viewerParameters.ProcessingMode == ProcessingMode.Remote)
             {
-                string extension;
                 var format = ReportFormat2String(ReportFormat);
 
-                output = reportViewer.ServerReport.Render(
+                var output = reportViewer.ServerReport.Render(
                     format,
-                    "<DeviceInfo></DeviceInfo>",
-                    null,
+                    _deviceInfo,
                     out mimeType,
-                    out extension);
+                    out encoding,
+                    out fileNameExtension,
+                    out streams,
+                    out warnings);
 
-                return output.ToByteArray();
+                return output;
             }
             else
             {
@@ -204,21 +247,18 @@ namespace MvcReportViewer
                     }
                 }
 
-                Warning[] warnings;
-                string[] streamids;
-                string encoding;
-                string extension;
-
                 var format = ReportFormat2String(ReportFormat);
 
-                return localReport.Render(
+                var reportDocument = localReport.Render(
                     format,
                     null,
                     out mimeType,
                     out encoding,
-                    out extension,
-                    out streamids,
+                    out fileNameExtension,
+                    out streams,
                     out warnings);
+
+                return reportDocument;
             }
         }
 

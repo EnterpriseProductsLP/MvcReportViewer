@@ -1,7 +1,6 @@
 ﻿using Microsoft.Reporting.WebForms;
 using System.Collections.Generic;
 using System;
-using System.Data;
 using System.IO;
 
 namespace MvcReportViewer

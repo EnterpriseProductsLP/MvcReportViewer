@@ -15,7 +15,11 @@ namespace MvcReportViewer
 
         IEnumerable<KeyValuePair<string, object>> DataSources { get; set; }
 
+        string DeviceInfo { get; set; }
+
         Stream EmbeddedResourceStream { get; set; }
+
+        Type EventsHandlerType { get; set; }
 
         string Filename { get; set; }
 

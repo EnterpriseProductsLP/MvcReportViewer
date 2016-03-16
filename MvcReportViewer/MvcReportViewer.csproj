@@ -82,6 +82,7 @@
     <Compile Include="Configuration\ReportViewerConfiguration.cs" />
     <Compile Include="ControlSettings.cs" />
     <Compile Include="ControlSettingsManager.cs" />
+    <Compile Include="DefaultParameterValues.cs" />
     <Compile Include="IBuildReportConfigurationProviders.cs" />
     <Compile Include="ILocalReportDataSourceProvider.cs" />
     <Compile Include="IMvcReportViewerOptions.cs" />
@@ -103,6 +104,7 @@
     <Compile Include="ReportRunner.cs" />
     <Compile Include="ReportRunnerExtensions.cs" />
     <Compile Include="ReportServerCredentials.cs" />
+    <Compile Include="ReportViewerEventsHandlerExtensions.cs" />
     <Compile Include="ReportViewerExtensions.cs" />
     <Compile Include="ReportViewerParameters.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

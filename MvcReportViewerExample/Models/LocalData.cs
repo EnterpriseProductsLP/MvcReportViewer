@@ -15,7 +15,7 @@ namespace MvcReportViewer.Example.Models
                 new CityModel {Id = 2, Name = "London"},
                 new CityModel {Id = 3, Name = "Paris"},
                 new CityModel {Id = 4, Name = "Prague"},
-                new CityModel {Id = 5, Name = "Amsterdam"},
+                new CityModel {Id = 5, Name = "Amsterdam"}
             };
         }
 

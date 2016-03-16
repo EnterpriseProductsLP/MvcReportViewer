@@ -12,7 +12,7 @@ namespace MvcReportViewer.Tests
             {
                 EmbeddedResourceStream = TestData.EmbeddedResourceStream,
                 ReportFormat = ReportFormat.Excel,
-                ReportIsEmbeddedResource = true,
+                ReportIsEmbeddedResource = true
             };
 
             var reportRunner = new ReportRunner(configuration);
@@ -119,7 +119,7 @@ namespace MvcReportViewer.Tests
                 ReportParameters = TestData.ActualParameters,
                 ReportPath = TestData.ReportName,
                 ReportServerUrl = TestData.Server,
-                Username = TestData.Username,
+                Username = TestData.Username
             };
 
             var reportRunner = new ReportRunner(configuration);

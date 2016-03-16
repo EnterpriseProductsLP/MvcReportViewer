@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Web.Mvc;
 
 using Microsoft.Reporting.WebForms;
@@ -9,9 +10,31 @@ namespace MvcReportViewer
 {
     public class ReportConfigurationProvider : IProvideReportConfiguration
     {
+        private Type _eventsHandlerType;
+
         public IEnumerable<KeyValuePair<string, object>> DataSources { get; set; }
 
+        public string DeviceInfo { get; set; }
+
         public Stream EmbeddedResourceStream { get; set; }
+
+        public Type EventsHandlerType
+        {
+            get
+            {
+                return _eventsHandlerType;
+            }
+            set
+            {
+                if (value.GetInterfaces().All(interfaceType => interfaceType != typeof(IReportViewerEventsHandler)))
+                {
+                    throw new MvcReportViewerException(
+                        $"{value.FullName} must implement IReportViewerEventsHandler interface.");
+                }
+
+                _eventsHandlerType = value;
+            }
+        }
 
         public string Filename { get; set; }
 

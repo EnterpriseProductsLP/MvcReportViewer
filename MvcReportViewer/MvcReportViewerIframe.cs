@@ -78,6 +78,7 @@ if (formElement{0}) {{
         {
             var controlId = configuration.ControlId;
             var controlSettings = configuration.ControlSettings;
+            var eventsHandlerType = configuration.EventsHandlerType?.AssemblyQualifiedName;
             var dataSources = configuration.DataSources;
             var method = configuration.FormMethod;
             var htmlAttributes = ParameterHelpers.GetReportParameters(configuration.HtmlAttributes).ToDictionary(pair => pair.Key, pair => pair.Value);
@@ -100,6 +101,7 @@ if (formElement{0}) {{
             SetDataSources(dataSources);
 
             _encryptParameters = _config.EncryptParameters;
+            _eventsHandlerType = eventsHandlerType;
             _htmlAttributes = htmlAttributes;
             _method = method;
             _password = password;
