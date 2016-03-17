@@ -6,6 +6,7 @@ using System.Web.Mvc;
 using System.Web;
 using MvcReportViewer.Configuration;
 using System.Collections;
+using System.IO;
 
 namespace MvcReportViewer
 {
@@ -21,37 +22,28 @@ namespace MvcReportViewer
 
         public ReportRunner(IProvideReportConfiguration configuration)
         {
-            var deviceInfo = configuration.DeviceInfo;
-            var embeddedResourceStream = configuration.EmbeddedResourceStream;
             var eventsHandlerType = configuration.EventsHandlerType?.AssemblyQualifiedName;
-            var filename = configuration.Filename;
             var localReportDataSources = configuration.DataSources?.ToDictionary(pair => pair.Key, pair => pair.Value);
-            var password = configuration.Password;
-            var processingMode = configuration.ProcessingMode;
-            var reportFormat = configuration.ReportFormat;
-            var reportIsEmbeddedResource = configuration.ReportIsEmbeddedResource;
             var reportParameters = ParameterHelpers.GetReportParameters(configuration.ReportParameters);
-            var reportPath = configuration.ReportPath;
-            var reportServerUrl = configuration.ReportServerUrl;
-            var username = configuration.Username;
 
             _viewerParameters = new ReportViewerParameters
             {
-                EmbeddedResourceStream = embeddedResourceStream,
+                EmbeddedResourceStream = configuration.EmbeddedResourceStream,
                 IsReportRunnerExecution = true,
                 Password = _config.Password,
-                ProcessingMode = processingMode,
-                ReportIsEmbeddedResource = reportIsEmbeddedResource,
-                ReportPath = reportPath,
+                ProcessingMode = configuration.ProcessingMode,
+                ReportIsEmbeddedResource = configuration.ReportIsEmbeddedResource,
+                ReportPath = configuration.ReportPath,
                 ReportServerUrl = _config.ReportServerUrl,
+                SubreportEmbeddedResourceStreams = configuration.SubreportEmbeddedResourceStreams,
                 Username = _config.Username
             };
 
-            ReportFormat = reportFormat;
-            _deviceInfo = deviceInfo;
-            _filename = filename;
+            ReportFormat = configuration.ReportFormat;
+            _deviceInfo = configuration.DeviceInfo;
+            _filename = configuration.Filename;
 
-            if (processingMode == ProcessingMode.Local)
+            if (configuration.ProcessingMode == ProcessingMode.Local)
             {
                 if (localReportDataSources != null)
                 {
@@ -64,11 +56,11 @@ namespace MvcReportViewer
                 }
             }
 
-            _viewerParameters.ReportServerUrl = reportServerUrl ?? _viewerParameters.ReportServerUrl;
-            if (username != null || password != null)
+            _viewerParameters.ReportServerUrl = configuration.ReportServerUrl ?? _viewerParameters.ReportServerUrl;
+            if (configuration.Username != null || configuration.Password != null)
             {
-                _viewerParameters.Username = username;
-                _viewerParameters.Password = password;
+                _viewerParameters.Username = configuration.Username;
+                _viewerParameters.Password = configuration.Password;
             }
 
             ParseParameters(reportParameters);

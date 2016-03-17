@@ -60,6 +60,8 @@ namespace MvcReportViewer
 
         public string ReportServerUrl { get; set; }
 
+        public IEnumerable<KeyValuePair<string, Stream>> SubreportEmbeddedResourceStreams { get; set; }
+
         public string Username { get; set; }
     }
 }

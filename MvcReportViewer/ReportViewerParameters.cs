@@ -41,5 +41,7 @@ namespace MvcReportViewer
         public string EventsHandlerType { get; set; }
 
         public bool ReportIsEmbeddedResource { get; set; }
+
+        public IEnumerable<KeyValuePair<string, Stream>> SubreportEmbeddedResourceStreams { get; set; }
     }
 }

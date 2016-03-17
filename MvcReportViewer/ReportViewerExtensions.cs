@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 
 using Microsoft.Reporting.WebForms;
 using System.Web.UI.WebControls;
@@ -46,6 +47,14 @@ namespace MvcReportViewer
             {
                 localReport.LoadReportDefinition(parameters.EmbeddedResourceStream);
                 localReport.ReportEmbeddedResource = parameters.ReportPath;
+
+                if (CanLoadSubreportDefinitions(parameters))
+                {
+                    foreach (var subreportEmbeddedResourceStream in parameters.SubreportEmbeddedResourceStreams)
+                    {
+                        localReport.LoadSubreportDefinition(subreportEmbeddedResourceStream.Key, subreportEmbeddedResourceStream.Value);
+                    }
+                }
             }
             else
             {
@@ -98,6 +107,11 @@ namespace MvcReportViewer
                 }
             }
             
+        }
+
+        private static bool CanLoadSubreportDefinitions(ReportViewerParameters parameters)
+        {
+            return parameters.SubreportEmbeddedResourceStreams != null && parameters.SubreportEmbeddedResourceStreams.Any();
         }
 
         private static void SetupRemoteProcessing(ReportViewer reportViewer, ReportViewerParameters parameters)
