@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Web.Mvc;
 using System.Collections.Generic;
-using System.Data;
+
 using MvcReportViewer.Example.Models;
 using Microsoft.Reporting.WebForms;
 
@@ -49,6 +49,7 @@ namespace MvcReportViewer.Example.Controllers
                 ReportFormat.Pdf,
                 LocalNoDataReportName,
                 new { TodayDate = DateTime.Now },
+                DefaultParameterValues.DeviceInfo,
                 ProcessingMode.Local);
         }
 
@@ -75,12 +76,13 @@ namespace MvcReportViewer.Example.Controllers
                     format,
                     LocalReportName,
                     new { Parameter1 = "Test", Parameter2 = 123 },
+                    DefaultParameterValues.DeviceInfo,
                     ProcessingMode.Local,
-                    new Dictionary<string, DataTable>
-                    {
-                        { "Products", LocalData.GetProducts() },
-                        { "Cities", LocalData.GetCities() }
-                    },
+                    new Dictionary<string, object>
+                        {
+                            { "Products", LocalData.GetProducts() },
+                            { "Cities", LocalData.GetCities() }
+                        },
                     filename);
             }
 

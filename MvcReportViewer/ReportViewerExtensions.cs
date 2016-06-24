@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Linq;
+
 using Microsoft.Reporting.WebForms;
 using System.Web.UI.WebControls;
 
@@ -8,7 +10,7 @@ namespace MvcReportViewer
     {
         public static void Initialize(this ReportViewer reportViewer, ReportViewerParameters parameters)
         {
-            var handlers = CreateEventHandlers(parameters);
+            var handlers = parameters.CreateEventHandlers();
 
             if (parameters.ProcessingMode == ProcessingMode.Remote)
             {
@@ -29,7 +31,7 @@ namespace MvcReportViewer
 
         public static void SetupDrillthrough(this ReportViewer reportViewer, string eventsHandlerType)
         {
-            var handlers = CreateEventHandlers(eventsHandlerType);
+            var handlers = ReportViewerEventsHandlerExtensions.CreateEventHandlers(eventsHandlerType);
             if (handlers != null)
             {
                 reportViewer.Drillthrough += (sender, e) => handlers.OnDrillthrough(reportViewer, e);
@@ -40,7 +42,24 @@ namespace MvcReportViewer
         {
             reportViewer.ProcessingMode = ProcessingMode.Local;
             var localReport = reportViewer.LocalReport;
-            localReport.ReportPath = parameters.ReportPath;
+
+            if (parameters.ReportIsEmbeddedResource)
+            {
+                localReport.LoadReportDefinition(parameters.EmbeddedResourceStream);
+                localReport.ReportEmbeddedResource = parameters.ReportPath;
+
+                if (CanLoadSubreportDefinitions(parameters))
+                {
+                    foreach (var subreportEmbeddedResourceStream in parameters.SubreportEmbeddedResourceStreams)
+                    {
+                        localReport.LoadSubreportDefinition(subreportEmbeddedResourceStream.Key, subreportEmbeddedResourceStream.Value);
+                    }
+                }
+            }
+            else
+            {
+                localReport.ReportPath = parameters.ReportPath;
+            }
 
             if (parameters.ControlSettings?.UseCurrentAppDomainPermissionSet != null &&
                 parameters.ControlSettings.UseCurrentAppDomainPermissionSet.Value)
@@ -88,6 +107,11 @@ namespace MvcReportViewer
                 }
             }
             
+        }
+
+        private static bool CanLoadSubreportDefinitions(ReportViewerParameters parameters)
+        {
+            return parameters.SubreportEmbeddedResourceStreams != null && parameters.SubreportEmbeddedResourceStreams.Any();
         }
 
         private static void SetupRemoteProcessing(ReportViewer reportViewer, ReportViewerParameters parameters)
@@ -320,34 +344,6 @@ namespace MvcReportViewer
             reportViewer.AsyncRendering = parameters.AsyncRendering ?? false;
 
             reportViewer.KeepSessionAlive = parameters.KeepSessionAlive ?? false;
-        }
-
-        private static IReportViewerEventsHandler CreateEventHandlers(ReportViewerParameters parameters)
-        {
-            return CreateEventHandlers(parameters.EventsHandlerType);
-        }
-
-        private static IReportViewerEventsHandler CreateEventHandlers(string eventsHandlerType)
-        {
-            if (string.IsNullOrEmpty(eventsHandlerType))
-            {
-                return null;
-            }
-
-            var handlersType = Type.GetType(eventsHandlerType);
-            if (handlersType == null)
-            {
-                throw new MvcReportViewerException($"Type {eventsHandlerType} is not found");
-            }
-
-            var handlers = Activator.CreateInstance(handlersType) as IReportViewerEventsHandler;
-            if (handlers == null)
-            {
-                throw new MvcReportViewerException(
-                    $"Type {eventsHandlerType} has not implemented IReportViewerEventsHandler interface or cannot be instantiated.");
-            }
-
-            return handlers;
         }
     }
 }

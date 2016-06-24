@@ -32,7 +32,7 @@
   <ItemGroup>
     <Reference Include="Microsoft.ReportViewer.WebForms, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>Libs\Microsoft.ReportViewer.WebForms.DLL</HintPath>
+      <HintPath>..\Referenced Assemblies\Microsoft.ReportViewer.WebForms.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <Private>True</Private>
@@ -100,6 +100,9 @@
     <Compile Include="..\MvcReportViewer\ControlSettingsManager.cs">
       <Link>ControlSettingsManager.cs</Link>
     </Compile>
+    <Compile Include="..\MvcReportViewer\DefaultParameterValues.cs">
+      <Link>DefaultParameterValues.cs</Link>
+    </Compile>
     <Compile Include="..\MvcReportViewer\IgnoreCaseExtensions.cs">
       <Link>IgnoreCaseExtensions.cs</Link>
     </Compile>
@@ -111,6 +114,9 @@
     </Compile>
     <Compile Include="..\MvcReportViewer\IProvideReportConfiguration.cs">
       <Link>IProvideReportConfiguration.cs</Link>
+    </Compile>
+    <Compile Include="..\MvcReportViewer\IRenderReports.cs">
+      <Link>IRenderReports.cs</Link>
     </Compile>
     <Compile Include="..\MvcReportViewer\IReportViewerEventsHandler.cs">
       <Link>IReportViewerEventsHandler.cs</Link>
@@ -131,6 +137,9 @@
     <Compile Include="..\MvcReportViewer\MvcReportViewerIframe.cs">
       <Link>MvcReportViewerIframe.cs</Link>
     </Compile>
+    <Compile Include="..\MvcReportViewer\ParameterHelpers.cs">
+      <Link>ParameterHelpers.cs</Link>
+    </Compile>
     <Compile Include="..\MvcReportViewer\Properties\AssemblyInfo.cs">
       <Link>Properties\AssemblyInfo.cs</Link>
     </Compile>
@@ -140,6 +149,9 @@
     <Compile Include="..\MvcReportViewer\ReportFormat.cs">
       <Link>ReportFormat.cs</Link>
     </Compile>
+    <Compile Include="..\MvcReportViewer\ReportRenderer.cs">
+      <Link>ReportRenderer.cs</Link>
+    </Compile>
     <Compile Include="..\MvcReportViewer\ReportRunner.cs">
       <Link>ReportRunner.cs</Link>
     </Compile>
@@ -148,6 +160,9 @@
     </Compile>
     <Compile Include="..\MvcReportViewer\ReportServerCredentials.cs">
       <Link>ReportServerCredentials.cs</Link>
+    </Compile>
+    <Compile Include="..\MvcReportViewer\ReportViewerEventsHandlerExtensions.cs">
+      <Link>ReportViewerEventsHandlerExtensions.cs</Link>
     </Compile>
     <Compile Include="..\MvcReportViewer\ReportViewerExtensions.cs">
       <Link>ReportViewerExtensions.cs</Link>
@@ -167,12 +182,16 @@
     <Compile Include="..\MvcReportViewer\SqlLocalDataSourceProvider.cs">
       <Link>SqlLocalDataSourceProvider.cs</Link>
     </Compile>
+    <Compile Include="..\MvcReportViewer\StreamExtensions.cs">
+      <Link>StreamExtensions.cs</Link>
+    </Compile>
     <Compile Include="..\MvcReportViewer\UriParameterAttribute.cs">
       <Link>UriParameterAttribute.cs</Link>
     </Compile>
     <Compile Include="..\MvcReportViewer\UriParameters.cs">
       <Link>UriParameters.cs</Link>
     </Compile>
+    <Compile Include="IBuildReportConfigurationProviders.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="..\MvcReportViewer\MvcReportViewer.aspx">

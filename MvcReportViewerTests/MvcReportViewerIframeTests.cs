@@ -2,10 +2,8 @@
 using System.Collections.Generic;
 using System.Web.Mvc;
 using System;
-using System.IO;
 using System.Linq;
 using System.Web;
-using System.Web.SessionState;
 
 using Microsoft.Reporting.WebForms;
 
@@ -27,9 +25,10 @@ namespace MvcReportViewer.Tests
         [Test]
         public void Iframe_FromConfiguration_SrcOnly()
         {
-            IProvideReportConfiguration configuration = new ReportConfigurationProvider
+            var configuration = new ReportConfigurationProvider
             {
                 ControlId = Guid.Empty,
+                ProcessingMode = ProcessingMode.Remote,
                 ReportPath = TestData.ReportName
             };
 
@@ -58,7 +57,7 @@ namespace MvcReportViewer.Tests
             var firstDataSource = new KeyValuePair<string, object>("First", new List<string>());
             var secondDataSource = new KeyValuePair<string, object>("Second", new List<string>());
 
-            IProvideReportConfiguration configuration = new ReportConfigurationProvider
+            var configuration = new ReportConfigurationProvider
             {
                 ControlId = Guid.Empty,
                 DataSources = new List<KeyValuePair<string, object>>
@@ -66,6 +65,7 @@ namespace MvcReportViewer.Tests
                     firstDataSource,
                     secondDataSource
                 },
+                ProcessingMode = ProcessingMode.Remote,
                 ReportPath = TestData.ReportName
             };
 
@@ -101,11 +101,12 @@ namespace MvcReportViewer.Tests
         [Test]
         public void Iframe_FromConfiguration_HeightWidthSrc()
         {
-            IProvideReportConfiguration configuration = new ReportConfigurationProvider
+            var configuration = new ReportConfigurationProvider
             {
                 ControlId = Guid.Empty,
                 HtmlAttributes = new { style = TestData.Style },
-                ReportPath = TestData.ReportName,
+                ProcessingMode = ProcessingMode.Remote,
+                ReportPath = TestData.ReportName
             };
 
             var iframe = _htmlHelper.MvcReportViewer(configuration);
@@ -135,9 +136,10 @@ namespace MvcReportViewer.Tests
         [Test]
         public void Iframe_FromConfiguration_SrcReportServer()
         {
-            IProvideReportConfiguration configuration = new ReportConfigurationProvider
+            var configuration = new ReportConfigurationProvider
             {
                 ControlId = Guid.Empty,
+                ProcessingMode = ProcessingMode.Remote,
                 ReportPath = TestData.ReportName,
                 ReportServerUrl = TestData.Server
             };
@@ -172,10 +174,11 @@ namespace MvcReportViewer.Tests
             IProvideReportConfiguration configuration = new ReportConfigurationProvider
             {
                 ControlId = Guid.Empty,
+                Password = TestData.Password,
+                ProcessingMode = ProcessingMode.Remote,
                 ReportPath = TestData.ReportName,
                 ReportServerUrl = TestData.Server,
-                Username = TestData.Username,
-                Password = TestData.Password
+                Username = TestData.Username
             };
 
             var iframe = _htmlHelper.MvcReportViewer(configuration);
@@ -209,9 +212,10 @@ namespace MvcReportViewer.Tests
         [Test]
         public void Iframe_FromConfiguration_SrcReportParameters()
         {
-            IProvideReportConfiguration configuration = new ReportConfigurationProvider
+            var configuration = new ReportConfigurationProvider
             {
                 ControlId = Guid.Empty,
+                ProcessingMode = ProcessingMode.Remote,
                 ReportParameters = new
                 {
                     Param1 = TestData.ExprectedParameters["Param1"],
@@ -256,18 +260,19 @@ namespace MvcReportViewer.Tests
         [Test]
         public void Iframe_FromConfiguration_SrcReportServerCredentialsPromptsParametersId()
         {
-            IProvideReportConfiguration configuration = new ReportConfigurationProvider
+            var configuration = new ReportConfigurationProvider
             {
                 ControlId = Guid.Empty,
                 ReportPath = TestData.ReportName,
                 ReportServerUrl = TestData.Server,
                 Username = TestData.Username,
                 Password = TestData.Password,
+                ProcessingMode = ProcessingMode.Remote,
                 ReportParameters = new List<KeyValuePair<string, object>>
                     {
                         new KeyValuePair<string, object>("Param1", TestData.ExprectedParameters["Param1"]),
                         new KeyValuePair<string, object>("Param2", TestData.ExprectedParameters["Param2"]),
-                        new KeyValuePair<string, object>("Param3", TestData.ExprectedParameters["Param3"]),
+                        new KeyValuePair<string, object>("Param3", TestData.ExprectedParameters["Param3"])
                     },
                 ControlSettings = new ControlSettings
                 {
@@ -306,7 +311,7 @@ namespace MvcReportViewer.Tests
                     {
                         new KeyValuePair<string, object>("Param1", TestData.ExprectedParameters["Param1"]),
                         new KeyValuePair<string, object>("Param2", TestData.ExprectedParameters["Param2"]),
-                        new KeyValuePair<string, object>("Param3", TestData.ExprectedParameters["Param3"]),
+                        new KeyValuePair<string, object>("Param3", TestData.ExprectedParameters["Param3"])
                     },
                 new ControlSettings
                     {
@@ -334,9 +339,10 @@ namespace MvcReportViewer.Tests
         [Test]
         public void Iframe_FromConfiguration_SrcClassId()
         {
-            IProvideReportConfiguration configuration = new ReportConfigurationProvider
+            var configuration = new ReportConfigurationProvider
             {
                 ControlId = Guid.Empty,
+                ProcessingMode = ProcessingMode.Remote,
                 ReportPath = TestData.ReportName,
                 HtmlAttributes = new { @class = TestData.CssClass, id = TestData.Id }
             };
@@ -405,7 +411,7 @@ namespace MvcReportViewer.Tests
 
         private void CheckPostGeneratedFromConfigurationIframe(string expectedTag)
         {
-            IProvideReportConfiguration configuration = new ReportConfigurationProvider
+            var configuration = new ReportConfigurationProvider
             {
                 ReportPath = TestData.ReportName,
                 FormMethod = FormMethod.Post

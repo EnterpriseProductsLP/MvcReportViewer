@@ -1,7 +1,7 @@
 ﻿using Microsoft.Reporting.WebForms;
 using System.Collections.Generic;
 using System;
-using System.Data;
+using System.IO;
 
 namespace MvcReportViewer
 {
@@ -11,6 +11,8 @@ namespace MvcReportViewer
         {
             ReportParameters = new Dictionary<string, ReportParameter>();
         }
+
+        public Stream EmbeddedResourceStream { get; set; }
 
         public string ReportServerUrl { get; set; }
 
@@ -28,7 +30,7 @@ namespace MvcReportViewer
 
         public IDictionary<string, ReportParameter> ReportParameters { get; set; }
 
-        public IDictionary<string, DataTable> LocalReportDataSources { get; set; }
+        public IDictionary<string, object> LocalReportDataSources { get; set; }
 
         public DataSourceCredentials[] DataSourceCredentials { get; set; }
 
@@ -37,5 +39,9 @@ namespace MvcReportViewer
         public ControlSettings ControlSettings { get; set; }
 
         public string EventsHandlerType { get; set; }
+
+        public bool ReportIsEmbeddedResource { get; set; }
+
+        public IEnumerable<KeyValuePair<string, Stream>> SubreportEmbeddedResourceStreams { get; set; }
     }
 }

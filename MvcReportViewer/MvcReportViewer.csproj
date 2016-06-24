@@ -31,7 +31,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Microsoft.ReportViewer.WebForms, Version=11.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL" />
+    <Reference Include="Microsoft.ReportViewer.WebForms, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Referenced Assemblies\Microsoft.ReportViewer.WebForms.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <Private>True</Private>
       <HintPath>..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
@@ -82,9 +85,12 @@
     <Compile Include="Configuration\ReportViewerConfiguration.cs" />
     <Compile Include="ControlSettings.cs" />
     <Compile Include="ControlSettingsManager.cs" />
+    <Compile Include="DefaultParameterValues.cs" />
+    <Compile Include="IBuildReportConfigurationProviders.cs" />
     <Compile Include="ILocalReportDataSourceProvider.cs" />
     <Compile Include="IMvcReportViewerOptions.cs" />
     <Compile Include="IProvideReportConfiguration.cs" />
+    <Compile Include="IRenderReports.cs" />
     <Compile Include="IReportViewerEventsHandler.cs" />
     <Compile Include="LocalReportDataSourceProviderFactory.cs" />
     <Compile Include="MvcReportViewer.aspx.cs">
@@ -94,11 +100,14 @@
     <Compile Include="MvcReportViewerException.cs" />
     <Compile Include="MvcReportViewerExtensions.cs" />
     <Compile Include="MvcReportViewerIframe.cs" />
+    <Compile Include="ParameterHelpers.cs" />
     <Compile Include="ReportConfigurationProvider.cs" />
     <Compile Include="ReportFormat.cs" />
+    <Compile Include="ReportRenderer.cs" />
     <Compile Include="ReportRunner.cs" />
     <Compile Include="ReportRunnerExtensions.cs" />
     <Compile Include="ReportServerCredentials.cs" />
+    <Compile Include="ReportViewerEventsHandlerExtensions.cs" />
     <Compile Include="ReportViewerExtensions.cs" />
     <Compile Include="ReportViewerParameters.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -107,6 +116,7 @@
     <Compile Include="SecurityUtil.cs" />
     <Compile Include="SessionLocalDataSourceProvider.cs" />
     <Compile Include="SqlLocalDataSourceProvider.cs" />
+    <Compile Include="StreamExtensions.cs" />
     <Compile Include="UriParameterAttribute.cs" />
     <Compile Include="UriParameters.cs" />
   </ItemGroup>

@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Drawing;
+using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Web;
 using System.Web.UI.WebControls;
 using Microsoft.Reporting.WebForms;
@@ -14,6 +16,10 @@ namespace MvcReportViewer.Tests
         public static readonly string DataSourceUsername = "user1";
 
         public static readonly string DataSourcePassword = "password1";
+
+        public static Stream EmbeddedResourceStream => Assembly.GetAssembly(typeof(TestData)).GetManifestResourceStream(ReportEmbeddedResourceName);
+
+        private static readonly string ReportEmbeddedResourceName = "MvcReportViewer.Tests.TestReports.TestReport.rdl";
 
         public static readonly string ReportName = "TestReport";
 

@@ -1,6 +1,9 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Web.Mvc;
+
+using Microsoft.Reporting.WebForms;
 
 namespace MvcReportViewer
 {
@@ -12,17 +15,33 @@ namespace MvcReportViewer
 
         IEnumerable<KeyValuePair<string, object>> DataSources { get; set; }
 
+        string DeviceInfo { get; set; }
+
+        Stream EmbeddedResourceStream { get; set; }
+
+        Type EventsHandlerType { get; set; }
+
+        string Filename { get; set; }
+
         FormMethod FormMethod { get; set; }
 
         object HtmlAttributes { get; set; }
 
         string Password { get; set; }
 
+        ProcessingMode ProcessingMode { get; set; }
+
+        ReportFormat ReportFormat { get; set; }
+
+        bool ReportIsEmbeddedResource { get; set; }
+
         object ReportParameters { get; set; }
 
         string ReportPath { get; set; }
 
         string ReportServerUrl { get; set; }
+
+        IEnumerable<KeyValuePair<string, Stream>> SubreportEmbeddedResourceStreams { get; set; }
 
         string Username { get; set; }
     }
